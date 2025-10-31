@@ -1,0 +1,135 @@
+📘 Git 명령어 & 워크플로우 요약
+
+git config --list
+
+✅ 새로운 레포지토리 만들기
+
+▶️ 새 프로젝트 시작
+echo "# 프로젝트명" >> README.md
+git init                                 # 현재 폴더를 Git 저장소로 초기화
+git add README.md                # README.md 파일을 스테이징 영역에 추가 (커밋 준비)
+git commit -m "first commit"     # 스테이징된 파일을 "first commit"이라는 메시지와 함께 커밋
+git branch -M main                 # 현재 브랜치 이름을 main으로 변경 (기본 브랜치 설정)
+git remote add origin 저장소주소   # GitHub의 원격 저장소를 origin이라는 이름으로 연결
+git push -u origin main  # main 브랜치를 origin 원격 저장소에 업로드
+                               # -u 옵션: 이후 git push만 입력해도 origin main으로 자동 푸시되도록 설정
+
+▶️ 기존 프로젝트 GitHub에 연결
+git remote add origin 저장소주소(https://github.com/사용자명/저장소명.git)
+git branch -M main
+git push -u origin main
+
+✅ 사용자 정보 설정
+내컴퓨터 전역에 설정
+git config --global user.name "lee-lo-un"
+git config --global user.email "leeloun@naver.com" 
+
+프로젝트(레파지토리)에 설정
+git config --local user.name "lee-lo-un"
+git config --local user.email "leeloun@naver.com" 
+
+사용자 정보 보기
+git config user.name 
+git config user.email
+
+✅ 브랜치 명령어
+# 브랜치 생성 및 이동
+git branch 브랜치명  # 생성
+git checkout 브랜치명  # 이동
+git checkout -b 새브랜치명  # 생성 + 이동
+
+# 브랜치 삭제 및 이름 변경
+git branch -d 브랜치명       # 삭제
+git branch -D 브랜치명       # 강제 삭제
+git branch -m 기존이름 새이름  # 이름 변경
+
+✅ 커밋 이력보기
+git log 
+git log --oneline   # 각 커밋을 한 줄로 표시 (해시 앞 7자리 + 메시지)
+git log --oneline --graph  # 브랜치 구조를 그래프로 시각화
+
+✅ 원격 저장소 관련
+git remote -v  # 등록된 원격 저장소 보기
+git remote add origin <repo-url>   # 원격 저장소 지정
+git remote set-url origin <repo-url>   # 원격 저장소 수정
+git remote remove origin  # origin 정보 삭제 
+git push -u origin main
+git pull origin main
+git push origin --delete 브랜치명
+git fetch --prune
+
+✅ 충돌 해결 및 병합
+git fetch origin main
+git merge origin/main
+# 충돌 해결 후:
+git add .
+git commit -m "resolve conflict"
+git push origin 브랜치명
+
+✅ 상태 확인
+git status
+git log --oneline
+git log --all
+git log --oneline --graph
+
+✅ 무시된 파일 캐시 제거
+git rm -r --cached .
+git rm -r --cached node_modules
+
+✅ 브랜치 복구 및 커밋 이동
+git reflog
+git reset --hard <커밋해시>
+git reset --hard ORIG_HEAD
+git checkout -b 브랜치명 커밋해시
+
+✅ 원격 브랜치 동기화
+git fetch origin
+git switch -c 브랜치명 origin/브랜치명
+
+✅ 용량 관리
+# Git LFS 사용
+git lfs install
+git lfs track "*.zip"
+git add .gitattributes
+git add 파일.zip
+git commit -m "Add large file with Git LFS"
+
+# .gitignore 예시
+*.log
+/build/
+
+# 저장소 정리
+git filter-branch --tree-filter 'rm -f path/to/file' HEAD
+git gc --aggressive --prune=now
+
+✅ 민감한 파일 완전 삭제
+java -jar bfg.jar --delete-files "파일명.확장자" my-repo.git
+
+✅ 인증용 GitHub 토큰 사용 (HTTPS)
+git remote set-url origin https://<username>:<token>@github.com/<username>/<repo>.git
+
+✅ 커밋
+git commit -m "메시지"
+
+✅강제 커밋
+git push origin main --force
+
+✅이전 커밋으로 돌아가기
+git reset head~1
+
+✅ 해당 커밋을 없애는(해당 커밋내용 삭제) 커밋을 만들기
+git revert 커밋ID
+
+✅ 이전 상태의 커밋으로 돌아가기
+#1-2-3-4-5 순서의 커밋이 있을때 1-2상태로 돌아가려면 git reset --hard 3커밋ID 
+git reset --hard <커밋ID> 
+git push origin main --force
+
+✅ Fork 프로젝트 설정
+git pull https://github.com/원본소유자/저장소명.git main  # 원본 저장소를 upstream으로 추가
+git pull upstream main                      # 원본의 최신 변경사항을 받아오기
+
+
+* 아래의 CRLF warning이 뜰때 다음을 입력 :  git config --global core.autocrlf true  
+warning: in the working copy of 'myfile.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'test.txt', CRLF will be replaced by LF the next time Git touches it: in the working copy of 'myfile.py', CRLF will be replaced by LF the next time Git touches it
